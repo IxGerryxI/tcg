@@ -1,0 +1,1 @@
+export { default as TCGCard } from './TCGCard.vue'
