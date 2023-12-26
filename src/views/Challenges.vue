@@ -12,6 +12,13 @@
 
     <main v-if="selectedSerie">
       <h2>{{ selectedSerie.name }}</h2>
+      <div class="challenges">
+        <button v-for="(challenge, index) of challenges" :keys="'challenge_' + index"
+          :class="['challenge', { 'selected': selectedChallenge.name == challenge.name }]"
+          @click="selectChallenge(challenge)">
+          {{ challenge.name }}
+        </button>
+      </div>
       <div v-if="!filteredCards" class="text-center">
         <Base.Loader></Base.Loader>
       </div>
@@ -31,13 +38,6 @@
           </div>
         </div> -->
         <h3>cards ({{ filteredCards.length }})</h3>
-        <div class="challenges">
-          <button v-for="(challenge, index) of challenges" :keys="'challenge_' + index"
-            :class="['challenge', { 'selected': selectedChallenge.name == challenge.name }]"
-            @click="selectChallenge(challenge)">
-            {{ challenge.name }}
-          </button>
-        </div>
         <div class="cards">
           <Utils.TCGCard v-for="(card, index) of filteredCards" :key="'card_' + index" :card="card"
             :series="selectedSerie"></Utils.TCGCard>
