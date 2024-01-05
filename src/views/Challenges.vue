@@ -70,7 +70,10 @@ const challenges = [
   { name: '151', filter: (card) => card.pokedexNr && card.pokedexNr < 151, sort: pokedexSort },
   { name: 'Eeveelutions', filter: card => [133, 134, 135, 136, 196, 197, 470, 471, 700].includes(card.pokedexNr), sort: pokedexSort },
   { name: 'Starters', filter: card => [1, 4, 7, 152, 155, 158, 252, 255, 258, 387, 390, 393, 495, 498, 501, 650, 653, 656, 722, 725, 728, 810, 813, 816, 906, 909, 912].includes(card.pokedexNr), sort: pokedexSort },
-  { name: 'Pikachus', filter: card => [25].includes(card.pokedexNr) }
+  { name: 'Pikachus', filter: card => [25].includes(card.pokedexNr) },
+  { name: 'Vivillon', filter: card => card.pokedexNr == 666 },
+  { name: '3 Birds', filter: card => [144, 145, 146].includes(card.pokedexNr), sort: pokedexSort },
+  { name: 'Lapras', filter: card => card.pokedexNr == 131 }
 ]
 const selectedChallenge = ref(challenges[0]);
 
