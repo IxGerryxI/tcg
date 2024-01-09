@@ -18,6 +18,8 @@
           @click="selectChallenge(challenge)">
           {{ challenge.name }}
         </button>
+        <br>
+        <input type="text" placeholder="search" v-model="search">
       </div>
       <div v-if="!filteredCards" class="text-center">
         <Base.Loader></Base.Loader>
@@ -65,6 +67,7 @@ const { series, cards } = storeToRefs(pokemonTCGStore)
 // const series = ref(null);
 const selectedSerie = ref(null);
 const selectedSet = ref(null);
+const search = ref("");
 const challenges = [
   { name: 'all' },
   { name: '151', filter: (card) => card.pokedexNr && card.pokedexNr < 151, sort: pokedexSort },
@@ -99,6 +102,11 @@ const filteredCards = computed(() => {
 
   if (selectedChallenge.value.filter) allCards = allCards.filter(selectedChallenge.value.filter);
   if (selectedChallenge.value.sort) allCards.sort(selectedChallenge.value.sort);
+
+  if (search.value) {
+    const val = search.value.toString().toLowerCase();
+    allCards = allCards.filter(card => card.name.toLowerCase().includes(val) || card.pokedexNr == val);
+  }
 
   return allCards;
 
