@@ -25,7 +25,10 @@ async function getDocument(collectionName, documentName, options = {}) {
     const snap = await getDoc(docRef);
     const data = snap.data();
 
-    if (cache) Cache.set(key, JSON.stringify(data));
+    try {
+        if (cache) Cache.set(key, JSON.stringify(data));
+    } catch (err) { console.warn(err) }
+
     return data;
 }
 
@@ -42,7 +45,9 @@ async function getCollection(name, options = {}) {
 
     const docs = await getDocuments(q);
 
-    if (cache) Cache.set(name, JSON.stringify(docs));
+    try {
+        if (cache) Cache.set(name, JSON.stringify(docs));
+    } catch (err) { console.warn(err) }
     return docs;
 }
 
@@ -53,8 +58,10 @@ async function getCollectionGroup(name, options = {}) {
 
     const colGroup = collectionGroup(db, name);
     const docs = await getDocuments(colGroup);
+    try {
+        if (cache) Cache.set(name, JSON.stringify(docs));
+    } catch (err) { console.warn(err) }
 
-    if (cache) Cache.set(name, JSON.stringify(docs));
     return docs;
 }
 
