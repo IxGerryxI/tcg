@@ -76,7 +76,8 @@ const challenges = [
   { name: 'Pikachus', filter: card => [25].includes(card.pokedexNr) },
   { name: 'Vivillon', filter: card => card.pokedexNr == 666 },
   { name: '3 Birds', filter: card => [144, 145, 146].includes(card.pokedexNr), sort: pokedexSort },
-  { name: 'Lapras', filter: card => card.pokedexNr == 131 }
+  { name: 'Lapras', filter: card => card.pokedexNr == 131 },
+  { name: 'the 4', filter: card => [123, 125, 126, 127].includes(card.pokedexNr), sort: pokedexSort }
 ]
 const selectedChallenge = ref(challenges[0]);
 
