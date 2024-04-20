@@ -3,7 +3,8 @@ import { useUserStore } from '@/stores';
 
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
-import Challenges from '@/views/Challenges.vue'
+import Cards from '@/views/Cards.vue'
+import Collections from '@/views/Collections.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,9 +20,14 @@ const router = createRouter({
       component: Login
     },
     {
-      path: '/challenges',
-      name: 'Challenges',
-      component: Challenges
+      path: '/cards',
+      name: 'Cards',
+      component: Cards
+    },
+    {
+      path: '/collections',
+      name: 'Collections',
+      component: Collections
     },
   ]
 })

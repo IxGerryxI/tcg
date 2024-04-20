@@ -1,18 +1,18 @@
 <template>
-  <div class="page">
+  <div class="page cards-page">
     <header>
       <a class="button" href="/">
         <Icon.Home style="width: 32px"></Icon.Home>
       </a>
       <Page.SyncDialog></Page.SyncDialog>
-      <h1>Challenges</h1>
+      <h1>Cards</h1>
     </header>
     <Page.Sidebar v-model:selectedSerie="selectedSerie" v-model:selectedSet="selectedSet" :series="series"
       class="sidebar" />
 
     <main v-if="selectedSerie">
       <h2>{{ selectedSerie.name }}</h2>
-      <div class="challenges">
+      <div class="content">
         <button v-for="(challenge, index) of challenges" :keys="'challenge_' + index"
           :class="['challenge', { 'selected': selectedChallenge.name == challenge.name }]"
           @click="selectChallenge(challenge)">
@@ -31,14 +31,6 @@
         <div v-if="selectedSet">
           <h3>{{ selectedSet.name }}</h3>
         </div>
-        <!-- <div v-if="'GenI' == selectedSet" class="genI_counter">
-          <div v-for="(count, index) of cardCountPerSet" :key="'cardCountPerSet_' + index">
-            <div class="counter">
-              <div class="label" :title="index + ' - ' + count">{{ index }} - {{ count }}</div>
-              <div class="bar" :style="'width: ' + count + 'px'"></div>
-            </div>
-          </div>
-        </div> -->
         <h3>cards ({{ filteredCards.length }})</h3>
         <div class="cards">
           <Utils.TCGCard v-for="(card, index) of filteredCards" :key="'card_' + index" :card="card"
@@ -52,7 +44,7 @@
 <script setup>
 import * as Base from '@/components/basic';
 import * as Icon from '@/components/icons';
-import * as Page from '@/components/Challenges';
+import * as Page from '@/components/Cards';
 import * as Utils from '@/components/utils'
 
 import { ref, onMounted, computed } from 'vue'
@@ -64,7 +56,6 @@ const pokemonTCGStore = usePokemonTCGStore()
 const { loadSeries } = pokemonTCGStore;
 const { series, cards } = storeToRefs(pokemonTCGStore)
 
-// const series = ref(null);
 const selectedSerie = ref(null);
 const selectedSet = ref(null);
 const search = ref("");
@@ -133,38 +124,7 @@ const cardCountPerSet = computed(() => {
 </script>
 
 <style scoped>
-.page {
-  margin: 0;
-  background-color: #121212;
-  color: #eee;
-  font-family: Arial, sans-serif;
-
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  grid-template-areas:
-    "header header"
-    "aside main"
-    "footer footer";
-}
-
-header {
-  display: flex;
-  align-items: center;
-  grid-area: header;
-  background-color: #191919;
-  margin-bottom: 15px;
-}
-
-.sidebar {
-  grid-area: aside;
-}
-
-main {
-  padding: 10px;
-  grid-area: main;
-}
-
-.challenges {
+.content {
   border-top: 1px solid rgba(100, 100, 100, 0.3);
   border-bottom: 1px solid rgba(100, 100, 100, 0.3);
   margin: 8px 2px;

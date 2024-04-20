@@ -1,7 +1,8 @@
 <template>
   <main>
     <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/challenges">Challenge</RouterLink>
+    <RouterLink to="/cards">Cards</RouterLink>
+    <RouterLink to="/collections">Collections</RouterLink>
   </main>
 </template>
 

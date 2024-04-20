@@ -4,7 +4,7 @@
             <div v-if="slots.title" class="title-wrapper">
                 <slot name="title"></slot>
             </div>
-            <span v-else> {{ title }}</span>
+            <span v-else>{{ title }}</span>
         </summary>
         <slot></slot>
     </details>

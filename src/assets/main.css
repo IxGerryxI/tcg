@@ -44,6 +44,40 @@ h3 {
     text-align: center;
 }
 
+/*--------------------------------------------------------------------------------------------
+------------------------------------------- LAYOUT -------------------------------------------
+--------------------------------------------------------------------------------------------*/
+.page {
+    margin: 0;
+    background-color: #121212;
+    color: #eee;
+    font-family: Arial, sans-serif;
+
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-areas:
+        "header header"
+        "aside main"
+        "footer footer";
+}
+
+header {
+    display: flex;
+    align-items: center;
+    grid-area: header;
+    background-color: #191919;
+    margin-bottom: 15px;
+}
+
+.sidebar {
+    grid-area: aside;
+}
+
+main {
+    padding: 10px;
+    grid-area: main;
+}
+
 
 /*--------------------------------------------------------------------------------------------
 -------------------------------------- UTILITY CLASSES ---------------------------------------
