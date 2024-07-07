@@ -9,12 +9,16 @@
 
 <script setup>
 import { logInWithPopup, logOut } from '@/modules/fireAuth';
+import router from '@/router';
 import { useUserStore, storeToRefs } from '@/stores';
 const { user } = storeToRefs(useUserStore());
 
-function toggleLogin() {
+async function toggleLogin() {
     if (user.value) logOut();
-    else logInWithPopup();
+    else {
+        await logInWithPopup();
+        router.push("/");
+    }
 }
 </script>
 

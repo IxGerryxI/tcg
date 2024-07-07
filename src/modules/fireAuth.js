@@ -27,7 +27,7 @@ function addAuthChangeListener(f) {
 
 function logInWithPopup() {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).catch(err => console.warn(err));
+    return signInWithPopup(auth, provider).catch(err => console.warn(err));
 }
 
 function logOut() {
