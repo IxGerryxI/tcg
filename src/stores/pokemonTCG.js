@@ -1,7 +1,7 @@
 import { ref, } from 'vue'
 import { defineStore } from 'pinia'
 import { getCollection } from '@/modules/firestore';
-import { queryCards } from '@/modules/firefunctions';
+import * as FireFunctions from '@/modules/fireFunctions';
 
 const SERIES_COLLECTION_NAME = 'Pokemoncards';
 export const usePokemonTCGStore = defineStore('pokemonTCG', () => {

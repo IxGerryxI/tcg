@@ -5,6 +5,7 @@ const { BigQuery } = require('@google-cloud/bigquery');
 const ONCALL_OPTIONS = {
     // enforceAppCheck: true,
     cors: ["http://localhost:5173", "pokemontcg.web.app"],
+    region: "europe-west3"
 }
 /**
  * this functions is for querying the store with definite attribute
@@ -13,6 +14,7 @@ const ONCALL_OPTIONS = {
  */
 exports.queryCards = onCall(ONCALL_OPTIONS, async (request) => {
     if(!isUserValid(request.auth.token.email)) return { message: 'You\'re a twat' };
+
     const { limit, orderBy, ...attributes } = request.data || {}
     let query = `SELECT * FROM \`whales-in-space.poemon_tcg.cards\``;
 
@@ -62,7 +64,7 @@ exports.getPokemon = onCall(ONCALL_OPTIONS, async (request) => {
     const options = {
         query: sqlQuery,
         // Location must match that of the dataset(s) referenced in the query.
-        location: 'EU',
+        location: 'europe-west3',
       };
       const [rows] = await bigqueryClient.query(options);
       return { message: 'You\'re not a twat', result: rows };

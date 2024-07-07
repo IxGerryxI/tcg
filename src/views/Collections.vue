@@ -12,9 +12,10 @@
         <main>
             <button @click="PokemonTCG.exportCSV">export Cards</button>
             <button @click="PokeAPI.exportCSV">export Pokemon</button>
-            <button @click="getPokemon">test BigQuery</button>
-            <button @click="exportCSV">export</button>
+            <br>
+            <button @click="getPokemon">get Pokemon</button>
             <button @click="getCards">get cards</button>
+            <button @click="getDistinctColumns">get distinct columns</button>
         </main>
     </div>
 </template>
@@ -31,15 +32,17 @@ async function getPokemon() {
     const result = await FireFunctions.call('getPokemon');
     console.log(result);
 }
-import { exportCSV } from '@/modules/pokemonTCGApi';
-import { queryCards, getDistinctColumns } from '@/modules/firefunctions';
 
-function getCards() {
+async function getCards() {
     const limit = 1000;
     const setname = ['Plasma Storm', 'Majestic Dawn'];
-    // queryCards({ limit, setname })
-    // queryCards();
-    getDistinctColumns()
+    const result = await FireFunctions.call('getDistinctColumns', { limit, setname });
+    console.log(result);
+}
+
+async function getDistinctColumns() {
+    const result = await FireFunctions.call('getDistinctColumns');
+    console.log(result);
 }
 </script>
 
