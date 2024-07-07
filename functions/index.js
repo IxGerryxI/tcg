@@ -12,8 +12,7 @@ const ONCALL_OPTIONS = {
  * you can also use the limit and the orderBy parameter 
  */
 exports.queryCards = onCall(ONCALL_OPTIONS, async (request) => {
-    const email = request.auth.token.email
-    if (email !== 'xgerrymobil@gmail.com') return { result: 'You\'re a twat' };
+    if(!isUserValid(request.auth.token.email)) return { message: 'You\'re a twat' };
     const { limit, orderBy, ...attributes } = request.data || {}
     let query = `SELECT * FROM \`whales-in-space.poemon_tcg.cards\``;
 
@@ -52,8 +51,11 @@ exports.queryCards = onCall(ONCALL_OPTIONS, async (request) => {
     return { message: 'You\'re not a twat', result: rows };
 });
 
-exports.getPokemon = onCall(async (request, context) => {
-    if(!isUserValid(request.auth.token.email)) return [];
+/**
+ * 
+ */
+exports.getPokemon = onCall(ONCALL_OPTIONS, async (request) => {
+    if(!isUserValid(request.auth.token.email)) return { message: 'You\'re a twat' };
 
     const bigqueryClient = new BigQuery();
     const sqlQuery = `Select * FROM \`whales-in-space.poemon_tcg.pokemon\``
@@ -63,17 +65,14 @@ exports.getPokemon = onCall(async (request, context) => {
         location: 'EU',
       };
       const [rows] = await bigqueryClient.query(options);
-      return {
-        pokemon: rows
-      }
+      return { message: 'You\'re not a twat', result: rows };
 })
 
 /**
  * 
  */
 exports.getDistinctColumns = onCall(ONCALL_OPTIONS, async (request) => {
-    const email = request.auth.token.email
-    if (email !== 'xgerrymobil@gmail.com') return { result: 'You\'re a twat' };
+    if(!isUserValid(request.auth.token.email)) return { message: 'You\'re a twat' };
     const location = 'europe-west3';
 
     const setQuery = "SELECT distinct setname, setsymbol, series, releasedate FROM \`whales-in-space.poemon_tcg.cards\`;";
