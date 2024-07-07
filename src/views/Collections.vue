@@ -10,7 +10,8 @@
 
         </div>
         <main>
-            <button @click="exportCSV">export</button>
+            <button @click="PokemonTCG.exportCSV">export Cards</button>
+            <button @click="PokeAPI.exportCSV">export Pokemon</button>
         </main>
     </div>
 </template>
@@ -19,7 +20,8 @@
 import * as Base from '@/components/basic';
 import * as Icon from '@/components/icons';
 import * as Utils from '@/components/utils';
-import { exportCSV } from '@/modules/pokemonTCGApi';
+import * as PokemonTCG from '@/modules/pokemonTCGApi';
+import * as PokeAPI from '@/modules/pokeAPI';
 
 </script>
 

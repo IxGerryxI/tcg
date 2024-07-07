@@ -107,7 +107,7 @@ async function exportCSV() {
         csv += '\n' + content.join(',');
 
     }
-    const file = new File([csv], 'popkemoncards.csv', {
+    const file = new File([csv], 'pokemoncards.csv', {
         type: 'text/plain',
     })
     const link = document.createElement('a');
