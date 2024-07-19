@@ -12,9 +12,12 @@
                         <template #title>
                             <h2>
                                 {{ serie.name }}
-                                <button @click="syncSerie(serie)" :disabled="syncing[serie.name]">
-                                    <Icon.Sync></Icon.Sync>
-                                </button>
+                                <div>
+                                    <!-- <Icon.Check v-if="syncedSeries.includes(serie.name)" class="icon"></Icon.Check> -->
+                                    <!-- <button @click="syncSerie(serie)" :disabled="syncing[serie.name]">
+                                        <Icon.Sync></Icon.Sync>
+                                    </button> -->
+                                </div>
                             </h2>
                         </template>
                         <div class="sets">
@@ -22,16 +25,13 @@
                                 :class="['set', { syncing: syncing[set.name] }]">
                                 <span>{{ set.name }} {{ set.id }}</span>
                                 <div>
-                                    <Base.Date :value="new Date(dbSets[serie.name]?.[set.id]?.lastUpdated?.seconds * 1000)"
-                                        datetime>
-                                    </Base.Date>
+                                    <Icon.Check v-if="syncedSets.includes(set.name)" class="icon"></Icon.Check>
                                     <button @click="syncSet(set)" :disabled="syncing[set.name] || syncing[serie.name]">
                                         <Icon.Sync></Icon.Sync>
                                     </button>
                                 </div>
                             </div>
                         </div>
-
                     </Base.Details>
                 </div>
             </div>
@@ -45,33 +45,28 @@ import * as Icon from '@/components/icons';
 
 import { ref, computed, onMounted } from 'vue';
 
-import { remove } from '@/modules/cache'
 import { getSets, getCardsForSerie, getCardsForSet } from '@/modules/pokemonTCGApi';
-import { setDocument } from '@/modules/firestore';
-
-import { usePokemonTCGStore } from '@/stores';
+import { usePokemonStore } from '@/stores';
 import { storeToRefs } from 'pinia';
-
-
-const pokemonTCGStore = usePokemonTCGStore();
-const { series: dbSeries } = storeToRefs(pokemonTCGStore);
-
-const dbSets = computed(() => {
-    console.log(dbSeries.value);
-    const sets = Object.values(dbSeries.value).reduce((acc, serie) => {
-        acc[serie.name] = serie.sets.reduce((acc, set) => ({ ...acc, [set.id]: set }), {});
-        return acc
-    }, {})
-
-    console.log(sets)
-    return sets;
+const pokemonTCGStore = usePokemonStore()
+const { sets } = storeToRefs(pokemonTCGStore);
+const syncedSets = computed(() => {
+    const values = sets.value.map(set => set.setname);
+    return values
 })
+const syncedSeries = computed(() => {
+    const values = sets.value.map(set => set.series);
+    return [...new Set(values)]
+});
+
 
 const series = ref(null);
 const syncing = ref({});
 onMounted(async () => {
-    const sets = await getSets();
-    series.value = mapSets(sets);
+    const allSets = await getSets();
+    series.value = mapSets(allSets);
+    if(sets.value.length === 0) pokemonTCGStore.loadSets();
+    console.log(sets.value)
 })
 
 function mapSets(sets) {
@@ -84,54 +79,54 @@ function mapSets(sets) {
     return Object.values(map).reverse();
 }
 
-async function syncSerie(serie) {
-    syncing.value[serie.name] = true;
-    remove('Pokemoncards');
-    console.log('syncSeries ', serie);
-    // update the serie
-    serie.sets.forEach(set => set.lastUpdated = new Date());
-    setDocument('Pokemoncards', serie.name, serie);
-    // update the cards
-    const cards = await getCardsForSerie(serie.name);
-    // console.log(cards);
-    for (let card of cards) {
-        card = preapreCard(card);
-
-        // console.log('update card ', card.id, card);
-        setDocument(`Pokemoncards/${serie.name}/cards`, card.id, card);
-    }
-    syncing.value[serie.name] = false;
-}
+// async function syncSerie(serie) {
+//     syncing.value[serie.name] = true;
+//     console.log('syncSeries ', serie);
+//     // update the cards
+//     const cards = await getCardsForSerie(serie.name);
+//     // console.log(cards);
+//     for (let card of cards) {
+//         card = preapreCard(card);
+//         //save to DB
+//     }
+//     syncing.value[serie.name] = false;
+// }
 
 async function syncSet(set) {
     syncing.value[set.name] = true;
-    remove('Pokemoncards');
     console.log('syncSet ', set);
     const cards = await getCardsForSet(set.id);
-    for (let card of cards) {
-        card = preapreCard(card);
-
-        // console.log('update card ', card.id, card);
-        setDocument(`Pokemoncards/${set.series}/cards`, card.id, card);
-    }
-
-    //update serie
-    set.lastUpdated = new Date();
-    const serie = series.value.find(serie => serie.name == set.series);
-    setDocument('Pokemoncards', serie.name, serie);
+    const preparedCards = cards.map(preapreCard);
+    console.log(preparedCards)
+    await pokemonTCGStore.insertCards(preparedCards);
 
     syncing.value[set.name] = false;
 }
 
 function preapreCard(card) {
-    const set = card.set;
-    card.set = {
-        id: set.id,
-        name: set.name,
-        series: set.series,
-    };
-    card.pokedexNr = card.nationalPokedexNumbers?.[0] || "";
-    delete card.nationalPokedexNumbers;
+    card = {
+        'id': card.id,
+        'image_small': card.images.small,
+        'image_large': card.images.large,
+        'name': card.name,
+        'pokedexnr': +card.nationalPokedexNumbers?.[0] || null,
+        'number': card.number.toString().padStart(3, '0'),
+        'artist': card.artist,
+        'rarity': card.rarity,
+        'setId': card.set.id,
+        'setname': card.set.name,
+        'setsymbol': card.set.images.symbol,
+        'setlogo': card.set.images.logo,
+        'series': card.set.series,
+        'printed_cards': +card.set.printedTotal,
+        'total_cards': +card.set.total,
+        'releasedate': card.set.releaseDate,
+    }
+
+    for(const key of Object.keys(card)) {
+        const value = card[key];
+        if(value == false) console.log(card);
+    }
 
     return card;
 }
@@ -170,6 +165,10 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.icon {
+    fill: #eee;
 }
 
 

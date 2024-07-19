@@ -23,6 +23,13 @@ button,
         background-color: transparent;
         padding: 0;
     }
+
+    &.icon {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 input {
@@ -78,9 +85,16 @@ h3 {
 header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     grid-area: header;
     background-color: #191919;
     margin-bottom: 15px;
+
+    & div {
+        display: flex;
+        /* flex-grow: 1; */
+        flex: 1 0 33.333%;
+    }
 }
 
 .sidebar {

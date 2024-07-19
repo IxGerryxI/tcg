@@ -1,3 +1,8 @@
 export { default as Home } from './Home.vue'
 export { default as Sync } from './Sync.vue'
 export { default as Close } from './Close.vue'
+export { default as Check } from './Check.vue'
+export { default as Book } from './Book.vue'
+export { default as Cards } from './Cards.vue'
+export { default as Pokeball } from './Pokeball.vue'
+export { default as User } from './User.vue'

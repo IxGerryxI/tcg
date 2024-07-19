@@ -16,10 +16,10 @@ exports.queryCards = onCall(ONCALL_OPTIONS, async (request) => {
     if(!isUserValid(request.auth.token.email)) return { message: 'You\'re a twat' };
 
     const { limit, orderBy, ...attributes } = request.data || {}
-    let query = `SELECT * FROM \`whales-in-space.poemon_tcg.cards\``;
+    let sqlQuery = `SELECT * FROM \`whales-in-space.poemon_tcg.cards\``;
 
     const params = {}; // this is for the params to replace in the prepare statement
-    if (Object.keys(attributes).length > 0) query += ' WHERE ';
+    if (Object.keys(attributes).length > 0) sqlQuery += ' WHERE ';
     for (const [name, value] of Object.entries(attributes)) {
         const values = Array.isArray(value) ? value : [value];
         const queries = [];
@@ -28,26 +28,27 @@ exports.queryCards = onCall(ONCALL_OPTIONS, async (request) => {
             params[key] = values[index]
             queries.push(`${name} = @${key}`);
         }
-        query += queries.join(' OR ');
+        sqlQuery += queries.join(' OR ');
     }
 
     if (orderBy) {
-        query += ' ORDER BY @orderBy ';
+        sqlQuery += ' ORDER BY @orderBy ';
         params.orderBy = orderBy;
     }
 
     if (limit) {
-        query += ' LIMIT @limit ';
+        sqlQuery += ' LIMIT @limit ';
         params.limit = limit;
     }
     // For all options, see https://cloud.google.com/bigquery/docs/reference/rest/v2/jobs/query
     const options = {
-        query: query,
+        query: sqlQuery,
         location: 'europe-west3',
         params
     };
 
     // Wait for the query to finish
+    console.log(options)
     const rows = await query(options);
 
     return { message: 'You\'re not a twat', result: rows };
@@ -68,6 +69,34 @@ exports.getPokemon = onCall(ONCALL_OPTIONS, async (request) => {
       };
       const [rows] = await bigqueryClient.query(options);
       return { message: 'You\'re not a twat', result: rows };
+})
+
+/**
+ * 
+ */
+exports.getSets = onCall(ONCALL_OPTIONS, async (request) => {
+    if(!isUserValid(request.auth.token.email)) return { message: 'You\'re a twat' };
+    const location = 'europe-west3';
+
+    const setQuery = "SELECT setname, setsymbol, series, releasedate, count(number) as number_cards FROM \`whales-in-space.poemon_tcg.cards\` group by setname, setsymbol, series, releasedate ORDER BY releasedate desc;";
+
+    const sets = await query({ query: setQuery, location });
+
+    return { message: 'You\'re not a twat', result: sets };
+})
+
+/**
+ * 
+ */
+exports.getArtists = onCall(ONCALL_OPTIONS, async (request) => {
+    if(!isUserValid(request.auth.token.email)) return { message: 'You\'re a twat' };
+    const location = 'europe-west3';
+    // const artistQuery = "SELECT distinct artist FROM \`whales-in-space.poemon_tcg.cards\`;";
+    const artistQuery = "SELECT artist, count(number) as number_cards FROM \`whales-in-space.poemon_tcg.cards\` group by artist order by artist;"
+
+    const artists = await query({ query: artistQuery, location });
+
+    return { message: 'You\'re not a twat', result: artists };
 })
 
 /**
@@ -94,12 +123,80 @@ exports.getDistinctColumns = onCall(ONCALL_OPTIONS, async (request) => {
 
 /**
  * 
+ */
+exports.insertCards = onCall(ONCALL_OPTIONS, async (request) => {
+    if(!isUserValid(request.auth.token.email)) return { message: 'You\'re a twat' };
+    const location = 'europe-west3';
+    const fields = ['id','image_small','image_large','name','pokedexnr','number','artist','rarity','setId','setname','setsymbol','setlogo','series','printed_cards','total_cards','releasedate'];
+    let statement = `INSERT INTO \`whales-in-space.poemon_tcg.cards\`
+    (${fields.join(',')})
+VALUES`; 
+    const TYPES = {
+        id: 'STRING',
+        image_small: 'STRING',
+        image_large: 'STRING',
+        name: 'STRING',
+        pokedexnr: 'INT64',
+        number: 'STRING',
+        artist: 'STRING',
+        rarity: 'STRING',
+        setId: 'STRING',
+        setname:'STRING',
+        setsymbol: 'STRING',
+        setlogo: 'STRING',
+        series: 'STRING',
+        printed_cards: 'INT64',
+        total_cards: 'INT64',
+        releasedate: 'STRING'
+    };
+    const params = {};
+    const types = {};
+    const cards = request.data.cards;
+    const values = [];
+    for(const index in cards) {
+        const card = cards[index];
+        let q = [];
+        for(const field of fields) {
+            const key = field + index;
+            if(field == 'releasedate') q.push(`PARSE_DATE('%Y/%m/%d', @${key})`)
+            else q.push(`@${key}`);
+            params[key] = card[field];
+            types[key] = TYPES[field];
+        }
+        values.push('(' + q.join(',') + ')');
+    }
+
+    statement += `\n ${values.join(',\n')};`
+
+    const result = await query({ query: statement, location, params, types });
+
+    return { message: 'You\'re not a twat', result };
+})
+
+/**
+ * 
+ */
+exports.getPokemon = onCall(ONCALL_OPTIONS, async (request) => {
+    if(!isUserValid(request.auth.token.email)) return { message: 'You\'re a twat' };
+    const location = 'europe-west3';
+
+    const statement = "SELECT * FROM \`whales-in-space.poemon_tcg.pokemon\` ORDER BY pokedexnr"
+
+    const pokemon = await query({ query: statement, location });
+
+    return { message: 'You\'re not a twat', result: pokemon };
+})
+
+/**
+ * 
  * @param {Object} options - For all options, see https://cloud.google.com/bigquery/docs/reference/rest/v2/jobs/query
  * @returns 
  */
 async function query(options) {
     const bigquery = new BigQuery();
-    const [job] = await bigquery.createQueryJob(options);
+    const result = await bigquery.createQueryJob(options);
+    console.log(result);
+    const [job] = result;
     const [rows] = await job.getQueryResults();
 
     const size = Buffer.byteLength(JSON.stringify(rows))

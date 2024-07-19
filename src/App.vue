@@ -1,9 +1,32 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
+  <header>
+    <div>
+      <RouterLink v-if="user" v-for="route of routes" :key="route.name" class="button icon" :to="route.path" :class="[{'selected': route.name == routeName}]">
+        <component :is="route.meta.icon" style="width: 28px"></component>
+        {{ route.name }}
+      </RouterLink>
+    </div>
+    <div><h1>{{ routeName }}</h1></div>
+    <div></div>
+  </header>
   <RouterView />
 </template>
 
-<style scoped></style>
+<script setup>
+import { useRoute, RouterLink, RouterView, useRouter } from 'vue-router'
+import { computed } from 'vue';
+import { useUserStore, storeToRefs } from '@/stores';
+const { user } = storeToRefs(useUserStore());
+
+const route = useRoute();
+const router = useRouter();
+const routes = computed(() => router.getRoutes());
+const routeName = computed(() => route.name);
+</script>
+
+<style scoped>
+  .selected {
+    fill: var(--highlight);
+    color: var(--highlight);
+  }
+</style>

@@ -1,9 +1,9 @@
 <template>
-  <main>
+  <!-- <main>
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/cards">Cards</RouterLink>
     <RouterLink to="/collections">Collections</RouterLink>
-  </main>
+  </main> -->
 </template>
 
 <script setup>

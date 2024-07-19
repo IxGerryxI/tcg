@@ -1,33 +1,55 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores';
+import * as Icon from '@/components/icons';
 
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import Cards from '@/views/Cards.vue'
 import Collections from '@/views/Collections.vue'
+import Pokedex from '@/views/Pokedex.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'Home',
+      component: Home,
+      meta: {
+        icon: Icon.Home,
+      }
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        icon: Icon.User,
+      }
     },
     {
       path: '/cards',
       name: 'Cards',
-      component: Cards
+      component: Cards,
+      meta: {
+        icon: Icon.Cards,
+      }
+    },
+    {
+      path: '/pokedex',
+      name: 'Pokedex',
+      component: Pokedex,
+      meta: {
+        icon: Icon.Pokeball,
+      }
     },
     {
       path: '/collections',
       name: 'Collections',
-      component: Collections
+      component: Collections,
+      meta: {
+        icon: Icon.Book,
+      }
     },
   ]
 })

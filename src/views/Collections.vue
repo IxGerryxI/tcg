@@ -1,13 +1,6 @@
 <template>
     <div class="page collection-page">
-        <header>
-            <a class="button" href="/">
-                <Icon.Home style="width: 32px"></Icon.Home>
-            </a>
-            <h1>Collections</h1>
-        </header>
         <div class="sidebar">
-
         </div>
         <main>
             <button @click="PokemonTCG.exportCSV">export Cards</button>
@@ -36,7 +29,7 @@ async function getPokemon() {
 async function getCards() {
     const limit = 1000;
     const setname = ['Plasma Storm', 'Majestic Dawn'];
-    const result = await FireFunctions.call('getDistinctColumns', { limit, setname });
+    const result = await FireFunctions.call('queryCards', { limit, setname });
     console.log(result);
 }
 

@@ -1,48 +1,38 @@
 <template>
     <div class="card">
-        <img :src="card.images.small" alt="">
-        <div class="name">#{{ card?.pokedexNr }} {{ card.name }}</div>
+        <div>
+            <img :src="card.image_small" alt="">
+            <div class="name">#{{ card?.pokedexnr }} {{ card.name }}</div>
+        </div>
         <div class="set">
-            <span>{{ card.number }}/{{ set.printedTotal }}</span>
-            <span>{{ card.set.name }}</span>
+            <span>{{ card.number }}/{{ card.total_cards }}</span>
+            <span>{{ card.setname }}</span>
         </div>
     </div>
 </template>
 
 <script setup>
-import { toRefs, computed } from 'vue';
 const props = defineProps({
     card: {
         type: Object,
         default: () => ({})
     },
-    series: {
-        type: Object,
-        default: () => ({}),
-    }
 })
-
-const { series, card } = toRefs(props);
-
-const set = computed(() => {
-    const set = series.value.sets.find(set => set.id == card.value.set.id);
-    return set;
-});
 </script>
 
 <style scoped>
 .card {
     display: flex;
     flex: 1 0 210px;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     flex-direction: column;
     padding: 5px;
-    margin: 5px;
     text-align: center;
     border: 3px solid rgba(100, 100, 100, 0.5);
     border-radius: 7px;
-    flex: 1 0 100px;
+    max-height: 330px;
+    max-width: 210px;
 
     & img {
         width: 170px;
