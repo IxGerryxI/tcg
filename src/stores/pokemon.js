@@ -105,11 +105,11 @@ export const usePokemonStore = defineStore('pokemonTCG', () => {
     */
     async function loadPokemon() {
         if (loaded.Pokemon) return;
-        loaded.Pokemon = 'loading';
+        loaded.value.Pokemon = 'loading';
         const result = await FireFunctions.call('getPokemon');
         pokemons.value = result.data.result;
         console.log(pokemons.value)
-        loaded.Pokemon = true;
+        loaded.value.Pokemon = true;
 
         return pokemons;
     }

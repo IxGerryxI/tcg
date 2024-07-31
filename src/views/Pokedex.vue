@@ -3,7 +3,7 @@
         <main>
             <div></div>
             <div v-if="loadingPokemon" class="loader_container">
-            <Base.Loader></Base.Loader>
+                <Base.Loader></Base.Loader>
             </div>
             <div v-else class="pokemon_container">
                 <div v-for="pokemon of pokemons" :key="pokemon.pokedexnr">
@@ -13,7 +13,7 @@
         </main>
     </div>
 </template>
-  
+
 <script setup>
 import * as Base from '@/components/basic';
 import * as Utils from '@/components/utils'
@@ -28,7 +28,7 @@ onMounted(() => {
 })
 
 </script>
-  
+
 <style scoped>
 main {
     max-width: 1200px;
@@ -36,9 +36,9 @@ main {
 }
 
 .loader_container {
-  display: flex;
-  justify-content: center;
-  flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
 }
 
 .pokemon_container {
