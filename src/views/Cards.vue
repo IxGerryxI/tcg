@@ -138,7 +138,6 @@ function toggleOwned(card) {
 
 function toggleFaved(card) {
   const faved = collections.value.get('faved');
-  console.log(faved);
   if (faved.has(card.id)) faved.delete(card.id);
   else faved.set(card.id, card.name);
 

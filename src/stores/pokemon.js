@@ -126,10 +126,8 @@ export const usePokemonStore = defineStore('pokemonTCG', () => {
     async function loadCollections() {
         const result = await getCollection(POKEMON_COLLECTION_ID, { cache: false });
 
-        console.log('collections: ', result);
         for (const collection of result) {
             collections.value.set(collection.docid, new Map(Object.entries(collection)));
-            console.log(collections.value);
         }
     }
 

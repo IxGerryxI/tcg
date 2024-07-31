@@ -79,11 +79,10 @@ async function getDocuments(query) {
 async function updateDocument(collectionName, docId, data) {
     const document = doc(db, collectionName, docId)
     const result = await updateDoc(document, data);
-    console.log(result);
+    return result;
 }
 
 async function setDocument(collectionName, key, data, options) {
     const result = await setDoc(doc(db, collectionName, key), data, options);
-
-    console.log(result);
+    return result;
 }
