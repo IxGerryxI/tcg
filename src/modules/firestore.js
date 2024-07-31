@@ -36,7 +36,7 @@ async function getCollection(name, options = {}) {
     const { cache = true, order = [], limitTo } = options;
 
     const cached = Cache.get(name);
-    if (cached) return JSON.parse(cached);
+    if (cache && cached) return JSON.parse(cached);
 
     const col = collection(db, name);
     let q = query(col);
@@ -54,7 +54,7 @@ async function getCollection(name, options = {}) {
 async function getCollectionGroup(name, options = {}) {
     const { cache = true } = options;
     const cached = Cache.get(name);
-    if (cached) return JSON.parse(cached);
+    if (cache && cached) return JSON.parse(cached);
 
     const colGroup = collectionGroup(db, name);
     const docs = await getDocuments(colGroup);
@@ -82,8 +82,8 @@ async function updateDocument(collectionName, docId, data) {
     console.log(result);
 }
 
-async function setDocument(collectionName, key, data) {
-    const result = await setDoc(doc(db, collectionName, key), data);
+async function setDocument(collectionName, key, data, options) {
+    const result = await setDoc(doc(db, collectionName, key), data, options);
 
     console.log(result);
 }

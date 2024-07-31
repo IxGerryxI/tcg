@@ -1,14 +1,19 @@
 <template>
     <div class="pokemon">
-        <img :src="pokemon.image" alt="" width="100%">
+        <img :src="pokemon.image" alt="" width="65%">
         <div class="info">
             <span class="pokedexnr">#{{ pokemon.pokedexnr }}</span>
             <span class="name">{{ capitalize(pokemon.name) }}</span>
+        </div>
+        <div class="icon_container">
+            <button class="icon_button"><Icon.Plus class="icon"></Icon.Plus></button>
         </div>
     </div>
 </template>
 
 <script setup>
+import * as Icon from '@/components/icons';
+
 const props = defineProps({
     pokemon: {
         type: Object,
@@ -23,8 +28,10 @@ function capitalize(string) {
 
 <style scoped>
 .pokemon {
+    position: relative;
     display: flex;
     flex-direction: column;
+    align-items: center;
     max-width: 175px;
 }
 
@@ -43,4 +50,25 @@ function capitalize(string) {
     margin-left: 10px;
     font-size: 1.2rem;
 }
+
+.icon_container {
+    display: flex;
+    position: absolute;
+    inset: 0 0 auto auto;
+}
+.icon_button  {
+    border-radius: 50%;
+    background-color: rgba(75, 75, 75, 0.4);
+    padding: 3px;
+    aspect-ratio: 1;
+
+    &:hover {
+        background-color: rgba(125, 125, 125, 0.4);
+    }
+    & .icon {
+        fill: #fff;
+        width: 1rem;
+    }
+}
+
 </style>

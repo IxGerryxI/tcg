@@ -1,7 +1,7 @@
 @import './base.css';
 
 :root {
-    --highlight: #245b47;
+    --highlight: hsl(158, 43%, 50%);
 }
 
 button,
