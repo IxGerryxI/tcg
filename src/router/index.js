@@ -6,6 +6,7 @@ import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import Cards from '@/views/Cards.vue'
 import Collections from '@/views/Collections.vue'
+import Collection from '@/views/Collection.vue';
 import Pokedex from '@/views/Pokedex.vue'
 
 const router = createRouter({
@@ -51,6 +52,14 @@ const router = createRouter({
         icon: Icon.Book,
       }
     },
+    {
+      path: '/collections/:collectionId',
+      name: 'Collection',
+      component: Collection,
+      meta: {
+        icon: Icon.Book,
+      }
+    }
   ]
 })
 
