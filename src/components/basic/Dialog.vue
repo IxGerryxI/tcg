@@ -28,9 +28,19 @@ import * as Icon from '@/components/icons';
 
 const dialog = ref(null);
 
+const emit = defineEmits(['open', 'close'])
+
 function openModal() {
+    emit('open')
     dialog.value.showModal()
 }
+
+function closeModal() {
+    emit('close')
+    dialog.value.close()
+}
+
+defineExpose({ closeModal })
 
 </script>
 

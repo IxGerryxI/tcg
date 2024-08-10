@@ -18,6 +18,7 @@ const router = createRouter({
       component: Home,
       meta: {
         icon: Icon.Home,
+        inNav: true,
       }
     },
     {
@@ -26,6 +27,7 @@ const router = createRouter({
       component: Login,
       meta: {
         icon: Icon.User,
+        inNav: true,
       }
     },
     {
@@ -34,6 +36,7 @@ const router = createRouter({
       component: Cards,
       meta: {
         icon: Icon.Cards,
+        inNav: true,
       }
     },
     {
@@ -42,6 +45,7 @@ const router = createRouter({
       component: Pokedex,
       meta: {
         icon: Icon.Pokeball,
+        inNav: true,
       }
     },
     {
@@ -50,6 +54,7 @@ const router = createRouter({
       component: Collections,
       meta: {
         icon: Icon.Book,
+        inNav: true,
       }
     },
     {

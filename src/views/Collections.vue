@@ -6,18 +6,19 @@
             <!-- <button @click="PokemonTCG.exportCSV">export Cards</button>
             <button @click="PokeAPI.exportCSV">export Pokemon</button> -->
             <div class="action_buttons">
-                <button>
-                    <Icon.Plus style="width: 24px;"></Icon.Plus>
-                </button>
+                <Page.CreateDialog></Page.CreateDialog>
             </div>
-            <div class="collections">
+            <div v-if="loadingCollections" class="loader_container">
+                <Base.Loader></Base.Loader>
+            </div>
+            <div v-else class="collections">
                 <div v-for="[name, collection] of collections" :key="'collection_' + name" class="collection">
                     <div class="image" @click="showCollection(collection)">
                         <Icon.Heart></Icon.Heart>
                     </div>
                     <div class="info">
                         <div class="name">{{ name }}</div>
-                        <div class="size"> {{ collection.size - 1 }} Cards </div>
+                        <div class="size"> {{ collection.size - 2 }} Cards </div>
                         <button @click="showCollection(collection)">view list</button>
                     </div>
                 </div>
@@ -31,16 +32,17 @@ import { onMounted } from 'vue';
 import * as Base from '@/components/basic';
 import * as Icon from '@/components/icons';
 import * as Utils from '@/components/utils';
-// import * as PokemonTCG from '@/modules/pokemonTCGApi';
-// import * as PokeAPI from '@/modules/pokeAPI';
+import * as Page from '@/components/Collections';
+
 import router from '@/router'
 
-import { usePokemonStore } from '@/stores'
+import { storeToRefs, usePokemonStore } from '@/stores'
 const pokemonStore = usePokemonStore();
-const { collections } = pokemonStore;
+const { collections, loadingCollections } = storeToRefs(pokemonStore);
 
 onMounted(() => {
-    if (collections.values.length === 0) pokemonStore.loadCollections();
+    console.log(collections.value)
+    if (collections.value.size === 0) pokemonStore.loadCollections();
 })
 
 function showCollection(collection) {
@@ -56,12 +58,24 @@ main {
     margin: 0 auto;
 }
 
+.loader_container {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
 .action_buttons {
     display: flex;
     justify-content: flex-end;
     margin: 0 0 25px 0;
     padding: 15px 25px;
     border-bottom: 1px solid;
+}
+
+.loader_container {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
 }
 
 .collections {

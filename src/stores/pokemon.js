@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { getCollection, setDocument } from '@/modules/firestore';
 import * as FireFunctions from '@/modules/fireFunctions';
 
-export const usePokemonStore = defineStore('pokemonTCG', () => {
+export const usePokemonStore = defineStore('pokemon', () => {
     const loaded = ref({});//this is a helper object to keep track of what series and artists have already been loaded
     const loadingPokemon = computed(() => Object.values(loaded.value).includes('loading'));
 
@@ -118,23 +118,33 @@ export const usePokemonStore = defineStore('pokemonTCG', () => {
      ********************************* COLLECTIONS ********************************
      *****************************************************************************/
     const collections = ref(new Map());
+    const loadingCollections = ref(false);
     const POKEMON_COLLECTION_ID = 'PokemonCollections';
     /**
      * loads all collections from firebase
      * @returns {Ref}
      */
     async function loadCollections() {
+        loadingCollections.value = true;
         const result = await getCollection(POKEMON_COLLECTION_ID, { cache: false });
 
         for (const collection of result) {
             collections.value.set(collection.docid, new Map(Object.entries(collection)));
         }
+        setTimeout(() => {
+            console.log('finish loading')
+            loadingCollections.value = false;
+        }, 2000)
     }
 
+    /**
+     * 
+     * @param {Object} collection 
+     */
     async function saveCollection(collection) {
         console.log('saveCollection');
         const result = await setDocument(POKEMON_COLLECTION_ID, collection.docid, collection);
-
+        collections.value.set(collection.docid, new Map(Object.entries(collection)));
         console.log(result);
     }
 
@@ -150,7 +160,7 @@ export const usePokemonStore = defineStore('pokemonTCG', () => {
         pokemons,
         loadPokemon,
         // COLLECTION
-        collections,
+        collections, loadingCollections,
         loadCollections, saveCollection,
     }
 })
