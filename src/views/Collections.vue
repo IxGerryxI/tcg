@@ -5,6 +5,8 @@
         <main>
             <!-- <button @click="PokemonTCG.exportCSV">export Cards</button>
             <button @click="PokeAPI.exportCSV">export Pokemon</button> -->
+            <!-- <button @click="updateEvoChain">update Evolution Chains</button> -->
+            <!-- <div>{{ STATEMENTS }}</div> -->
             <div class="action_buttons">
                 <Page.CreateDialog></Page.CreateDialog>
             </div>
@@ -28,12 +30,12 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import * as Base from '@/components/basic';
 import * as Icon from '@/components/icons';
 import * as Utils from '@/components/utils';
 import * as Page from '@/components/Collections';
-
+// import * as PokeAPI from '@/modules/pokeAPI';
 import router from '@/router'
 
 import { storeToRefs, usePokemonStore } from '@/stores'
@@ -45,10 +47,18 @@ onMounted(() => {
     if (collections.value.size === 0) pokemonStore.loadCollections();
 })
 
+
 function showCollection(collection) {
     const collectionId = collection.get('docid');
     router.push({ name: 'Collection', params: { collectionId } })
 }
+
+// const STATEMENTS = ref("");
+// async function updateEvoChain() {
+//     const statements = await PokeAPI.createEvolutionUpdateStatement();
+//     console.log(statements)
+//     STATEMENTS.value = statements.join("\n")
+// }
 </script>
 
 <style scoped>

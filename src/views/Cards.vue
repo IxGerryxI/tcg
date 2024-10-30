@@ -1,6 +1,7 @@
 <template>
   <div class="page cards-page">
     <main>
+      <Page.SyncDialog></Page.SyncDialog>
       <div class="search">
         <input v-model="search" type="text" style="width: 100%;" placeholder="search">
         <div class="text-right small-text clickable" @click="toggleAdvancedSearch">advanced search</div>
